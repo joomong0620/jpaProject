@@ -123,7 +123,7 @@ public class MemberServiceImpl implements MemberService {
 				   // -> 전달한 name을 포함한 결과를 age 내림차순으로 정렬
 				   
 				   .stream()
-				   // stream() : 가져온 회원 목록을 스트림 형태로 변환 (반복 처리를 쉽게하기 위해서)
+				   // stream() : 가져온g 회원 목록을 스트림 형태로 변환 (반복 처리를 쉽게하기 위해서)
 				   
 				   .map(MemberDTO.Response::toDto)
 				   //map() : 각 Member 엔티티 객체를 MemberDTO.Response 객체로 변환

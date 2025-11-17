@@ -1,17 +1,21 @@
 package com.jr.jpa.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.jr.jpa.enums.CommonEnums;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -112,7 +116,21 @@ public class Member {
 	
 	}
 	
+	// Member : Board(1:N)
+	@OneToMany(mappedBy="member", cascade=CascadeType.ALL)
+		// mappedBy = "연관관계 주인의 필드명"
+		// casecade = CasecadeType.ALL : 부모(Nember)에서 자식(Board)으로 cascade 전파
+		// ALL: 저장, 수정, 삭제, refresh, detach 즉, 부모에서 하는 영속성 관련 동작을 자식에게 모두 전파
+		private List<Board> boards = new ArrayList<>();
 	
+	
+	
+	
+//	// Member (비주인)
+//	@OneToMany(mappedBy = "writer") // 주인이 어디있어? 라고 임명해주는 것
+	
+//	
+//	
 
 	
 }
