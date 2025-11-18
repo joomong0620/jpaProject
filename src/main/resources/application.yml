@@ -1,4 +1,8 @@
 spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    # -> JSON(@RequestBody, @ResponseBody)에만 적용된다.
+    # -> @ModelAttribute에는 적용 X
   datasource:
     hikari:
       jdbc-url: jdbc:h2:tcp://localhost/C:/workspace/6_SpringBoot/jpaProject/tdb

@@ -42,6 +42,15 @@ public class BoardTag {
 	private Tag tag; 
 	
 	
+	// 연관 편의 메소드
+	public void addBoard(Board board) {
+	    this.board = board;
+	    if(board.getBoardTags().contains(this)) {
+	        board.getBoardTags().add(this);
+	    }
+	}
+
+	
 	
 	
 	

@@ -12,7 +12,7 @@ import com.jr.jpa.dto.MemberDTO.Create;
 import com.jr.jpa.dto.MemberDTO.Response;
 import com.jr.jpa.dto.MemberDTO.Update;
 import com.jr.jpa.entity.Member;
-import com.jr.jpa.respository.MemberRepository2;
+import com.jr.jpa.repository.MemberRepository2;
 
 import lombok.RequiredArgsConstructor;
 

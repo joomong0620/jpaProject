@@ -22,6 +22,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 // Entity (엔티티) : @Entity가 붙은 실제 클래스 또는 그 인스턴스 또는 JPA가 관리하는 객체
 // 					DB 테이블의 한 행과 엔티티 객체가 1:1로 매핑
@@ -30,6 +31,7 @@ import lombok.NoArgsConstructor;
 
 @Builder // 복잡한 객체 생성을 쉽게 하기 위해 사용하는 어노테이션 
 @Getter
+@Setter
 @NoArgsConstructor(access=AccessLevel.PROTECTED) //JPA 스펙상 필수 + 외부 생성 방지
 @AllArgsConstructor
 
@@ -47,7 +49,7 @@ public class Member {
 	@Column(name="MEMBER_ID", length = 30)
 	private String memberId;
 	
-	@Column(name="MEBMER_PW", length = 100, nullable = false)
+	@Column(name="MEMBER_PW", length = 100, nullable = false)
 	// name : "MEMBER_PW" : DB 컬럼 이름을 MEMBER_PW로 지정함
 	// length = 100 : 문자열 길이를 최대 100 자로 제한함 (varchar(100), 미작성 시 255 기본값)
 	// nullable = false : NULL 값 허용 X (NOT NULL 제약조건 생성)
@@ -124,13 +126,18 @@ public class Member {
 		private List<Board> boards = new ArrayList<>();
 	
 	
+		// 연관관계 편의 메소드
+		public void addBoard(Board board) {
+			this.boards.add(board); // List에 추가 # 여기서 this 쓰나 안쓰나 똑같음
+			board.setMember(this); // 반대편(연관관계 주인)도 같이 세팅 # this는 항상 나를 가리킴
+			
+		
+		}
 	
 	
-//	// Member (비주인)
-//	@OneToMany(mappedBy = "writer") // 주인이 어디있어? 라고 임명해주는 것
 	
-//	
-//	
+	
+	
 
 	
 }

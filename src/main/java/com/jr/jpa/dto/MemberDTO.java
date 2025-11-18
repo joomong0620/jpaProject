@@ -40,7 +40,7 @@ public class MemberDTO {
 		public Member toEntity() {
 			return Member.builder()
 						 .memberId(this.member_id)
-						 .memberPw(member_pw)
+						 .memberPw(this.member_pw)
 						 .memberName(this.member_name)
 						 .email(this.email)
 						 .address(this.address)

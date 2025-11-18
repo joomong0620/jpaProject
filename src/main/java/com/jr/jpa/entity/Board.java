@@ -26,6 +26,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 
@@ -36,7 +37,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor										// JPA 사용 하려면 꼭 써줘야함
 @Builder
 @Getter
-
+@Setter
 public class Board {
 	// @Id : 기본키(PK) 지정
 	// @Column: 컬럼 이름, 길이, null 허용 여부 설정
@@ -55,7 +56,7 @@ public class Board {
 		 // 저장하게 되는데 그걸 varchar2로는 감당이 안돼서 clob으로 사용한다.
 	@Column(name="BOARD_CONTENT", nullable=false)
 	private String boardContent;
-
+	
 	
 	//원본명
 	@Column(name="ORIGIN_NAME", length = 100)
@@ -102,24 +103,37 @@ public class Board {
 	
 	
 	// Board : Reply(1:N)
-	@OneToMany(mappedBy="board", cascade = CascadeType.ALL) // mappedBy 있으면 비주인
-	// mappedBy = "연관관계 주인의 필드명"
-		private List<Reply> replies = new ArrayList<>();
-		private List<BoardTag> boardtags = new ArrayList<>();
+	// 비주인
+	// orphanRemoval=true : (N:1) 또는 (1:N) 연관관계에서 자식의 생명주기를 부모가 통제 (주인 비주인 관계 X, 부모 자식 관계 O)
+	// -> 부모 엔티티에서 자식과의 관계가 제거되면 자식도 자동으로 삭제 
+	@OneToMany(mappedBy="board", cascade = CascadeType.ALL, orphanRemoval=true) // // mappedBy = "연관관계 주인의 필드명", mappedBy 있으면 비주인
+	@Builder.Default // 기본값을 유지
+	private List<Reply> replies = new ArrayList<>();	
 	
-		 
-	
+	// 항상 쿼리문을 이용해서 사용했는데 우리는 객체 지향적으로 코드를 사용하고 싶으니까
+	// orphanRemoval은 null 값을 세팅한다거나 해당 객체를 빼버리게 되면 더이상 관계가 끊긴 자식들을 다 삭제하라는 소리이다
 		
+	//Board : BoardTag(1:N)
+	@OneToMany(mappedBy="board", cascade = CascadeType.ALL, orphanRemoval=true)
+	@Builder.Default // replies랑 boardTags 둘다 넣어줘야함
+	private List<BoardTag> boardTags = new ArrayList<>();
 	
-	
+	// 연관관계 편의 메소드
+	// Board와 Member 동기화
+	public void addMember(Member member) {
+		this.member = member;
+		
+		if(!member.getBoards().contains(this)) { // 반대쪽(Member)에 Board 추가
+			member.getBoards().add(this);
+	}
 //주인 : BOARD, Reply
 //비주인: MEMBER, TAG
+	}
 	
 	
-	
-	
-	
-	
-	
-	
+	public void changeFile(String originName, String changeName) {
+		this.originName = originName;
+		this.changeName = changeName;
+		
+	}
 }
