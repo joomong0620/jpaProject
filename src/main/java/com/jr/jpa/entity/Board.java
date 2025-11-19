@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.jr.jpa.enums.CommonEnums;
+import com.jr.jpa.enums.CommonEnums.Status;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -136,4 +137,26 @@ public class Board {
 		this.changeName = changeName;
 		
 	}
+	
+	
+	// 제목 변경 메소드
+	public void changeTitle(String boardTitle) {
+		if(boardTitle != null && !boardTitle.isEmpty())
+		this.boardTitle = boardTitle;
+	}
+	
+	// 내용 변경 메소드
+	public void changeContent(String boardContent) {
+		if(boardContent != null && !boardContent.isEmpty())
+		this.boardContent = boardContent;
+		
+		
+		
+	}
+
+	// 게시글 삭제(상태 변경) 메소드
+	public void setStatus(Status n) {
+		this.status = n;
+	}
+	
 }

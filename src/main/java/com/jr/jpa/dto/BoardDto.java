@@ -1,11 +1,13 @@
 package com.jr.jpa.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jr.jpa.entity.Board;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,8 +35,89 @@ public class BoardDto {
 					.boardContent(this.boardContent)
 					.build();
 		}
+	}
+	
+	@Builder
+	@Getter
+	@ToString
+	public static class Response{
+		private Long boardNo;
+		private String boardTitle;
+		private String boardContent;
+		private String originName;
+		private String changeName;
+		private LocalDateTime createDate;
+		private Integer count;
+		private String memberId;
+		private String memberName;
+		private List<String> tags;
 		
 		
+		
+		// 게시글 상세 조회용 DTO
+		public static Response toDto(Board board) {
+			return Response.builder()
+		            .boardNo(board.getBoardNo())
+		            .boardTitle(board.getBoardTitle())
+		            .boardContent(board.getBoardContent())
+		            .originName(board.getOriginName())
+		            .count(board.getCount())
+		            .changeName(board.getChangeName())
+		            .createDate(board.getCreateDate())
+		            .memberId(board.getMember().getMemberId())
+		            .memberName(board.getMember().getMemberName())
+		            .tags(board.getBoardTags() // 태그 넘버 필요 없고 그냥 태그명만 필요하다. 반복문 사용
+		            		.stream()
+		            		.map(boardTag -> boardTag.getTag().getTagName())
+		            		.toList())
+		            .build();
+		}
+		
+		
+		// 게시글 목록조회용 DTO
+		public static Response toSimpleDto(Board board) {
+			// 전달받은 Entity를 DTO로 변환
+			// -> Builder 패턴 만들고자 할 때는 Builder 어노테이션 필수
+			return Response.builder()
+					.boardNo(board.getBoardNo())
+					.boardTitle(board.getBoardTitle())
+					.originName(board.getOriginName())
+					.count(board.getCount())
+					.createDate(board.getCreateDate())
+					.memberId(board.getMember().getMemberId())
+					.build();
+			
+			// 게시글 번호
+			// 게시글 제목
+			// 파일 원본명
+			// 조회수
+			// 생성날짜
+			// 회원아이디
+		}
+		
+
+	}
+	// 게시글 수정용 DTO
+	@Getter
+	@ToString
+	@Setter
+	public static class Update {
+		private String boardTitle;
+		private String boardContent;
+		private MultipartFile File;
+		private List<String> tags;
+		
+//		public Board toEntity() {
+//			return Board.builder()
+//					.boardTitle(this.boardTitle)
+//					.boardContent(this.boardContent)
+//					.build();
+//		} => 없어도 됨
 		
 	}
+
 }
+	
+	
+	
+	
