@@ -18,7 +18,7 @@ import com.jr.jpa.entity.BoardTag;
 import com.jr.jpa.entity.Member;
 import com.jr.jpa.entity.Tag;
 import com.jr.jpa.enums.CommonEnums;
-import com.jr.jpa.repository.BoardRepository;
+import com.jr.jpa.repository.BoardRepository2;
 import com.jr.jpa.repository.MemberRepository2;
 import com.jr.jpa.repository.TagRepository;
 
@@ -30,9 +30,11 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true) // readOnly가 아니라면 불필요하게 실행하게 되니까! 필요할 때만 사용한다. 
 public class BoardServiceImpl implements BoardService {
 
-	private final BoardRepository boardRepository;
+//	private final BoardRepository boardRepository;
+	private final BoardRepository2 boardRepository; // 왜 갈아끼워요>??
 	private final MemberRepository2 memberRepository;
 	private final TagRepository tagRepository;
+	
 
 	private final String UPLOAD_PATH = "C:\\workspace\\6_SpringBoot\\jpaProject\\src\\main\\resources\\static\\images\\board\\";
 
@@ -218,8 +220,35 @@ public class BoardServiceImpl implements BoardService {
 		Board board = boardRepository.findById(boardNo)
 				.orElseThrow(() -> new EntityNotFoundException("해당 게시글이 존재하지 않습니다."));
 		
-		board.setStatus(CommonEnums.Status.N);   // 삭제 상태로 변경
 
+		// # 해당 경로에 업로드된 파일이 있다면 찾아서 그 파일을 삭제 하겠다.
+		
+		
+		// 방법 1) 상태 변경 메소드
+		board.setStatus(CommonEnums.Status.N);   // 삭제 상태로 변경
+		
+		
+//		// 방법 2) 삭제
+//		boardRepository.delete(board);
+
+	}
+	
+	@Transactional 
+	@Override
+	public void deleteBoard(Long boardNo) {
+
+	// 해당 게시글이 존재하는지 조회
+			Board board = boardRepository.findById(boardNo)
+					.orElseThrow(() -> new EntityNotFoundException("해당 게시글이 존재하지 않습니다."));
+			
+			
+			// 업로드된 파일이 있다면 UPLOAD_PATH 경로의 파일 삭제
+			if(board.getChangeName() != null) {
+				new File(UPLOAD_PATH + board.getChangeName()).delete();
+			}
+			
+			// 방법 2) 삭제
+			boardRepository.delete(board);
 	}
 
 

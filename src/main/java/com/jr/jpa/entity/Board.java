@@ -159,4 +159,7 @@ public class Board {
 		this.status = n;
 	}
 	
+	
+
 }
+

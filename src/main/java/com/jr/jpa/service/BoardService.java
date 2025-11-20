@@ -27,6 +27,9 @@ public interface BoardService {
 
    // 게시글 삭제(상태 업데이트)
    void updateStatus(Long boardNo);
+
+   // 게시글 삭제
+    void deleteBoard(Long boardNo);
    
 
 

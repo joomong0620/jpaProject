@@ -76,6 +76,13 @@ public class BoardRepositoryImpl implements BoardRepository {
 		// 찾은 경우 -> Optional<Board>
 		// 못 찾은 경우 -> optioanl.empty()
 	}
+
+
+	// 게시글 삭제
+	@Override
+	public void delete(Board board) {
+		em.remove(board);
+	}
 	
 
 

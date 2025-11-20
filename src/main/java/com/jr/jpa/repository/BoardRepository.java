@@ -21,7 +21,9 @@ public interface BoardRepository {
 	// 게시글 상세 조회
 	Optional<Board> findById(Long boardNo);
 
-	// 게시글 수정
+	// 게시글 삭제
+	void delete(Board board);
+	
 
 
 }

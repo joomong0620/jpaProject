@@ -3,8 +3,10 @@ package com.jr.jpa.controller;
 import java.io.IOException;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,10 +29,7 @@ public class BoardController {
 	
 	
 	private final BoardService boardService; // 한 번만 세팅 가능
-	
-	// (참고) 
-	// json
-	
+
 	// 게시글 작성
 	@PostMapping
 	public ResponseEntity<Long> createBoard(@ModelAttribute BoardDto.Create boardCreate) 
@@ -44,6 +43,9 @@ public class BoardController {
 		// @ModelAttribute : "폼 바인딩" 개념. 키-값 쌍으로 자바 DTO에 바인딩
 		// -> 대표 헤더 : application/x-www-form-urlencoded, multipart/form-data
 		// -> 값이 ModelAttribute에 세팅되려면 dto에 getter/setter 필수로 작성
+		// -> 스네이크 표기법 적용 X
+		// -> Postman에서 form-data로 보내야함
+		
 		
 		
 		// Content-Type(전송 방식)에 따라서 Spring이 내부적ㅇ르ㅗ 어떤 어노테이션으로 처리할 지 결정
@@ -62,9 +64,14 @@ public class BoardController {
 	// sort  직렬 기준 : 속성, 방향
 	@GetMapping
 	public ResponseEntity <PageDto<BoardDto.Response>> getBoardList(
-			@PageableDefault(size=10, page=0) Pageable pageble){
+			@PageableDefault(size=10, page=0,
+			sort = "boardNo", direction = Sort.Direction.DESC) Pageable pageble){
 		// Pageable: 페이징 정보를 담은 객체
+		
+		// (참고) Sort import 자동완성 안되는 경우 직접 작성
+		// import org.springframework.data.domain.Sort;
 		return ResponseEntity.ok(new PageDto<>(boardService.getBoardList(pageble)));
+		
 	}
 		
 	// 게시글 상세 조회
@@ -98,14 +105,18 @@ public class BoardController {
            @PathVariable Long boardNo) {
 	   //update board set status = N where boardNo = 8
        boardService.updateStatus(boardNo);
-
        return ResponseEntity.ok().build();
    }
 		   
    
+
    
-   
-   
-   
+   // 게시글 삭제
+	@DeleteMapping("/{boardNo}")
+	public ResponseEntity<Void> deleteBoard(@PathVariable("boardNo") Long boardNo){
+	boardService.deleteBoard(boardNo);
+	return ResponseEntity.ok().build();
+	
+	}
 
 }
